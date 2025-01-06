@@ -3,96 +3,92 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elodlim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: elodlim <elodlim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 20:04:06 by elodlim           #+#    #+#             */
-/*   Updated: 2025/01/02 20:04:14 by elodlim          ###   ########.fr       */
+/*   Updated: 2025/01/06 01:00:19 by elodlim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-int ft_check(char *str)
+char	*ft_strchr(char *s, int c)
 {
-	int		i;
+	int	i;
 
 	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '\n')
-			return (i);
-		i++;
-	}
-	return (-1);
-}
-
-int ft_copy(char **line, char **buff)
-{
-	int		start;
-	char	*temp;
-	char	*line_temp;
-
-	if  ((start = ft_check(*buff)) >= 0)
-	{
-		temp = ft_substr(*buff, 0, start);
-		line_temp = *line;
-		*line = ft_strjoin(*line, temp);
-		free(temp);
-		free(line_temp);
-		*buff = ft_subbuff(*buff, start + 1, (ft_strlen(*buff) - start));
+	if (!s)
 		return (0);
-	}
-	else
+	if (c == '\0')
+		return ((char *)&s[ft_strlen(s)]);
+	while (s[i] != '\0')
 	{
-		temp = NULL;
-		if (*line)
-			temp = *line;
-		*line = ft_strjoin(*line, *buff);
-		if (temp)
-			free(temp);
-		return (1);
-	}
-	return (-1);
-}
-
-int ft_eof(int ret, char **buff, char **line)
-{
-	if (ret == -1)
-		return (-1);
-	free(*buff);
-	*buff = NULL;
-	if (*line == NULL)
-	{
-		*line = malloc(sizeof(char) * 1);
-		*line[0] = 0;
+		if (s[i] == (char) c)
+			return ((char *)&s[i]);
+		i++;
 	}
 	return (0);
 }
 
-int get_next_line(int fd, char **line)
+size_t	ft_strlen(char *s)
 {
-	static char	*buff = NULL;
-	int			ret;
+	size_t	i;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || !line)
-		return (-1);
-	*line = NULL;
-	ret = 1;
-	if (buff)
-		ret = ft_copy(line, &buff);
-	if (ret == 0)
-		return (1);
-	if (!buff)
-		if (!(buff = malloc(sizeof(char) * BUFFER_SIZE + 1)))
-			return (-1);
-	while ((ret = read(fd, buff, BUFFER_SIZE)) > 0)
+	i = 0;
+	if (!s)
+		return (0);
+	while (s[i] != '\0')
+		i++;
+	return (i);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	char			*ptr;
+	unsigned int	i;
+
+	i = 0;
+	ptr = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2)) + 1);
+	if (!ptr)
+		return (NULL);
+	while (*s1)
 	{
-		buff[ret] = '\0';
-		if (!ft_copy(line, &buff))
-			return (1);
+		ptr[i] = *s1;
+		i++;
+		s1++;
 	}
-	if (ret <= 0)
-		return (ft_eof(ret, &buff, line));
-	return (1);
+	while (*s2)
+	{
+		ptr[i] = *s2;
+		i++;
+		s2++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
+}
+
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void		*new;
+	size_t		i;
+
+	if (size != 0 && nmemb > ((size_t) - 1 / size))
+		return (0);
+	new = (void *) malloc(size * nmemb);
+	if (!new)
+		return (NULL);
+	i = 0;
+	while (i < size * nmemb)
+	{
+		*(unsigned char *)(new + i) = 0;
+		i++;
+	}
+	return (new);
+}
+
+char	*clear(char *buffer, char *buf)
+{
+	free(buffer);
+	free(buf);
+	return (NULL);
 }

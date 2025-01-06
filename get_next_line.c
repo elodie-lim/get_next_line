@@ -3,96 +3,108 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: elodlim <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: elodlim <elodlim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 20:05:37 by elodlim           #+#    #+#             */
-/*   Updated: 2025/01/02 20:05:40 by elodlim          ###   ########.fr       */
+/*   Updated: 2025/01/06 00:59:29 by elodlim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-int		ft_check(char *str)
+char	*get_file(int fd, char *result)
 {
+	char	*buffer;
+	char	*new_result;
+	int		bytes;
+
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!buffer)
+		return (NULL);
+	bytes = 1;
+	while (bytes > 0)
+	{
+		bytes = read(fd, buffer, BUFFER_SIZE);
+		if (bytes < 0)
+			return (clear(buffer, result));
+		buffer[bytes] = '\0';
+		new_result = ft_strjoin(result, buffer);
+		free(result);
+		result = new_result;
+		if (ft_strchr(result, '\n'))
+			break ;
+	}
+	free(buffer);
+	return (result);
+}
+
+static char	*get_line(char *buffer)
+{
+	char	*line;
 	int		i;
 
 	i = 0;
-	while (str[i])
+	if (!buffer[i])
+		return (NULL);
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	line = ft_calloc(i + (buffer[i] == '\n') + 1, sizeof(char));
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
 	{
-		if (str[i] == '\n')
-			return (i);
+		line[i] = buffer[i];
 		i++;
 	}
-	return (-1);
+	if (buffer[i] == '\n')
+		line[i] = '\n';
+	return (line);
 }
 
-int		ft_copy(char **line, char **buff)
+char	*get_next(char *buffer)
 {
-	int		start;
-	char	*temp;
-	char	*line_temp;
+	int		i;
+	int		j;
+	char	*new_buffer;
 
-	if ((start = ft_check(*buff)) >= 0)
+	i = 0;
+	while (buffer[i] && buffer[i] != '\n')
+		i++;
+	if (!buffer[i])
 	{
-		temp = ft_substr(*buff, 0, start);
-		line_temp = *line;
-		*line = ft_strjoin(*line, temp);
-		free(temp);
-		free(line_temp);
-		*buff = ft_subbuff(*buff, start + 1, (ft_strlen(*buff) - start));
-		return (0);
+		free(buffer);
+		return (NULL);
 	}
-	else
-	{
-		temp = NULL;
-		if (*line)
-			temp = *line;
-		*line = ft_strjoin(*line, *buff);
-		if (temp)
-			free(temp);
-		return (1);
-	}
-	return (-1);
+	new_buffer = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
+	if (!new_buffer)
+		return (NULL);
+	i++;
+	j = 0;
+	while (buffer[i])
+		new_buffer[j++] = buffer[i++];
+	free(buffer);
+	return (new_buffer);
 }
 
-int		ft_eof(int ret, char **buff, char **line)
+char	*get_next_line(int fd)
 {
-	if (ret == -1)
-		return (-1);
-	free(*buff);
-	*buff = NULL;
-	if (*line == NULL)
-	{
-		*line = malloc(sizeof(char) * 1);
-		*line[0] = 0;
-	}
-	return (0);
-}
+	char		*line;
+	static char	*buffer;
 
-int		get_next_line(int fd, char **line)
-{
-	static char	*buff = NULL;
-	int			ret;
-
-	if (fd < 0 || BUFFER_SIZE <= 0 || !line)
-		return (-1);
-	*line = NULL;
-	ret = 1;
-	if (buff)
-		ret = ft_copy(line, &buff);
-	if (ret == 0)
-		return (1);
-	if (!buff)
-		if (!(buff = malloc(sizeof(char) * BUFFER_SIZE + 1)))
-			return (-1);
-	while ((ret = read(fd, buff, BUFFER_SIZE)) > 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	if (!buffer)
+		buffer = ft_calloc(1, 1);
+	if (!buffer)
+		return (NULL);
+	buffer = get_file(fd, buffer);
+	if (!buffer)
 	{
-		buff[ret] = '\0';
-		if (!ft_copy(line, &buff))
-			return (1);
+		free(buffer);
+		return (NULL);
 	}
-	if (ret <= 0)
-		return (ft_eof(ret, &buff, line));
-	return (1);
+	line = get_line(buffer);
+	buffer = get_next(buffer);
+	return (line);
 }
