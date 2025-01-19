@@ -67,13 +67,13 @@ char	*read_into_buffer(char *buffer, int fd)
 		if (bytes_read < 0 || (bytes_read == 0 && !buffer[0]))
 			return (free_all(tmp, buffer));
 		tmp[bytes_read] = '\0';
-		updated_buffer = ft_strjoin(buffer, tmp);
-		free(buffer);
-		buffer = updated_buffer;
+		buffer = ft_strjoin(buffer, tmp);
+		free(tmp);
+		if (!buffer)
+			return (NULL);
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
-	free(tmp);
 	return (buffer);
 }
 
