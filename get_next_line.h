@@ -14,8 +14,6 @@
 # define GET_NEXT_LINE_H
 # include <fcntl.h>
 # include <stdlib.h>
-# include <sys/stat.h>
-# include <sys/types.h>
 # include <unistd.h>
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
