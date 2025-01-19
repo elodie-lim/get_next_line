@@ -12,72 +12,75 @@
 
 #include "get_next_line.h"
 
-int	ft_strlen(const char *str)
+void	ft_bzero(void *mem, size_t sz)
 {
-	int	i;
+	while (sz--)
+		*(unsigned char *)mem++ = 0;
+}
+
+void	*ft_calloc(size_t nmemb, size_t sz)
+{
+	void	*ptr;
+	size_t	msz;
+
+	msz = nmemb * sz;
+	if (nmemb == 0 || sz == 0)
+	{
+		nmemb = 1;
+		sz = 1;
+	}
+	if ((int)nmemb < 0 || (int)sz < 0)
+		return (0);
+	ptr = malloc(msz);
+	if (ptr)
+		ft_bzero(ptr, msz);
+	return (ptr);
+}
+
+ssize_t	ft_index_of(char const *s, char c)
+{
+	ssize_t	i;
 
 	i = 0;
-	while (str[i])
+	while (s[i])
+	{
+		if (c == s[i])
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
+size_t	ft_strlen(char const *s)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
 		i++;
 	return (i);
 }
 
-void	ft_strlcpy(char *dst, const char *src, size_t size)
-{
-	size_t	count;
-
-	count = 0;
-	if (size)
-	{
-		while (count < size - 1 && src[count])
-		{
-			dst[count] = src[count];
-			count++;
-		}
-		dst[count] = '\0';
-	}
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	while (*s)
-	{
-		if (*s == (char)c)
-			return ((char *)s);
-		s++;
-	}
-	if (!c)
-		return ((char *)s);
-	return (NULL);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*cpy;
-	size_t	length;
-
-	length = ft_strlen(s);
-	cpy = malloc(length + 1);
-	if (!cpy)
-		return (NULL);
-	ft_strlcpy(cpy, s, length + 1);
-	return (cpy);
-}
-
 char	*ft_strjoin(char const *s1, char const *s2)
 {
-	char	*new_str;
-	size_t	length;
+	size_t const	s1sz = ft_strlen(s1);
+	size_t const	sz = s1sz + ft_strlen(s2) + 1;
+	char			*s;
+	size_t			i;
 
-	if (!s1)
-		return (ft_strdup(s2));
-	if (!s2)
-		return (ft_strdup(s1));
-	length = ft_strlen(s1) + ft_strlen(s2) + 1;
-	new_str = malloc(length);
-	if (!new_str)
-		return (NULL);
-	ft_strlcpy(new_str, s1, ft_strlen(s1) + 1);
-	ft_strlcpy(new_str + ft_strlen(s1), s2, ft_strlen(s2) + 1);
-	return (new_str);
+	s = ft_calloc(sz, sizeof(char));
+	if (!s)
+		return (0);
+	i = 0;
+	while (i < s1sz)
+	{
+		s[i] = s1[i];
+		i++;
+	}
+	while (i < sz)
+	{
+		s[i] = s2[i - s1sz];
+		i++;
+	}
+	return (s);
 }
