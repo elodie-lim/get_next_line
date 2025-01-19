@@ -12,28 +12,28 @@
 
 #include "get_next_line.h"
 
-void	ft_bzero(void *mem, size_t sz)
+void	ft_bzero(void *mem, size_t n)
 {
-	while (sz--)
+	while (n--)
 		*(unsigned char *)mem++ = 0;
 }
 
-void	*ft_calloc(size_t nmemb, size_t sz)
+void	*ft_calloc(size_t element_count, size_t element_size)
 {
 	void	*ptr;
-	size_t	msz;
+	size_t	total_size;
 
-	msz = nmemb * sz;
-	if (nmemb == 0 || sz == 0)
+	total_size = element_count * element_size;
+	if (element_count == 0 || element_size == 0)
 	{
-		nmemb = 1;
-		sz = 1;
+		element_count = 1;
+		element_size = 1;
 	}
-	if ((int)nmemb < 0 || (int)sz < 0)
+	if ((int)element_count < 0 || (int)element_size < 0)
 		return (0);
-	ptr = malloc(msz);
+	ptr = malloc(total_size);
 	if (ptr)
-		ft_bzero(ptr, msz);
+		ft_bzero(ptr, total_size);
 	return (ptr);
 }
 

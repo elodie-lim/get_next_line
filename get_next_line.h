@@ -32,5 +32,5 @@ char		*get_next_line(int fd);
 ssize_t		ft_index_of(char const *s, char c);
 char		*ft_strjoin(char const *s1, char const *s2);
 size_t		ft_strlen(char const *s);
-void		*ft_calloc(size_t nmemb, size_t sz);
+void		*ft_calloc(size_t element_count, size_t sz);
 #endif
