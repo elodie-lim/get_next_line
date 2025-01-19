@@ -124,8 +124,8 @@ char	*get_next_line(int fd)
 // int	main(int argc, char const *argv[])
 // {
 // 	int		fd;
-// 	int		lines;
-// 	int		start_lines;
+// 	int		lines_read;
+// 	int		nb_lines_to_read;
 // 	char	*s;
 
 // 	if (argc < 2)
@@ -133,16 +133,16 @@ char	*get_next_line(int fd)
 // 	else
 // 		fd = open(argv[1], O_RDONLY);
 // 	if (argc == 3)
-// 		start_lines = atoi(argv[2]);
+// 		nb_lines_to_read = atoi(argv[2]);
 // 	else
-// 		start_lines = 5;
-// 	lines = 0;
-// 	while (lines < start_lines)
+// 		nb_lines_to_read = 5;
+// 	lines_read = 0;
+// 	while (lines_read < nb_lines_to_read)
 // 	{
 // 		s = get_next_line(fd);
 // 		printf("%s", s);
 // 		free(s);
-// 		lines++;
+// 		lines_read++;
 // 	}
 // 	return (0);
 // }
