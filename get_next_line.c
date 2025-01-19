@@ -6,7 +6,7 @@
 /*   By: elodlim <elodlim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 20:05:37 by elodlim           #+#    #+#             */
-/*   Updated: 2025/01/19 12:13:10 by elodlim          ###   ########.fr       */
+/*   Updated: 2025/01/19 14:00:39 by elodlim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,24 +36,24 @@ char	*get_full_line(char *content)
 	return (line);
 }
 
-char	*update_content(char *content, int line_length)
+char	*trim_buffer(char *content, int line_length)
 {
-	char	*new_content;
+	char	*updated_buffer;
 	int		old_length;
 
 	old_length = ft_strlen(content);
 	if (line_length < old_length)
-		new_content = ft_strdup(content + line_length);
+		updated_buffer = ft_strdup(content + line_length);
 	else
-		new_content = ft_strdup("");
+		updated_buffer = ft_strdup("");
 	free(content);
-	content = new_content;
+	content = updated_buffer;
 	return (content);
 }
 
-char	*read_file_to_content(char *buffer, int fd)
+char	*read_into_buffer(char *buffer, int fd)
 {
-	char	*new_content;
+	char	*updated_buffer;
 	char	*tmp;
 	int		bytes_read;
 
@@ -67,9 +67,9 @@ char	*read_file_to_content(char *buffer, int fd)
 		if (bytes_read < 0 || (bytes_read == 0 && !buffer[0]))
 			return (free_all(tmp, buffer));
 		tmp[bytes_read] = '\0';
-		new_content = ft_strjoin(buffer, tmp);
+		updated_buffer = ft_strjoin(buffer, tmp);
 		free(buffer);
-		buffer = new_content;
+		buffer = updated_buffer;
 		if (ft_strchr(buffer, '\n'))
 			break ;
 	}
@@ -88,7 +88,7 @@ char	*get_next_line(int fd)
 		buffer = ft_strdup("");
 	if (!buffer)
 		return (NULL);
-	buffer = read_file_to_content(buffer, fd);
+	buffer = read_into_buffer(buffer, fd);
 	if (!buffer)
 		return (NULL);
 	line = get_full_line(buffer);
@@ -98,7 +98,7 @@ char	*get_next_line(int fd)
 		buffer = NULL;
 		return (NULL);
 	}
-	buffer = update_content(buffer, ft_strlen(line));
+	buffer = trim_buffer(buffer, ft_strlen(line));
 	return (line);
 }
 
