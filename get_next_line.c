@@ -6,7 +6,7 @@
 /*   By: elodlim <elodlim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 20:05:37 by elodlim           #+#    #+#             */
-/*   Updated: 2025/01/19 14:00:39 by elodlim          ###   ########.fr       */
+/*   Updated: 2025/01/21 00:15:29 by elodlim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*join_and_free(char *dest, char *src)
 	char	*new_str;
 
 	if (!dest)
-		return (0);
+		return (NULL);
 	new_str = ft_strjoin(dest, src);
 	free(dest);
 	return (new_str);
@@ -35,11 +35,11 @@ char	*remove_extracted_line(char *buffer)
 	if (!buffer[i])
 	{
 		free(buffer);
-		return (0);
+		return (NULL);
 	}
 	line = ft_calloc((ft_strlen(buffer) - i + 1), sizeof(char));
 	if (!line)
-		return (0);
+		return (NULL);
 	i++;
 	j = 0;
 	while (buffer[i])
@@ -55,10 +55,10 @@ char	*extract_line(char *buffer)
 
 	i = 0;
 	if (!buffer[i])
-		return (0);
+		return (NULL);
 	while (buffer[i] && buffer[i] != '\n')
 		i++;
-	line = ft_calloc(i + 1 + !!(buffer[i] == '\n'), sizeof(char));
+	line = ft_calloc(i + 1 + (buffer[i] == '\n'), sizeof(char));
 	if (!line)
 		return (0);
 	i = 0;
@@ -81,7 +81,7 @@ char	*read_to_buffer(int fd, char *existing_content)
 		existing_content = ft_calloc(1, 1);
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!buffer)
-		return (0);
+		return (NULL);
 	bytes_read = 1;
 	while (bytes_read > 0)
 	{
@@ -89,11 +89,11 @@ char	*read_to_buffer(int fd, char *existing_content)
 		if (bytes_read == -1)
 		{
 			free(buffer);
-			return (0);
+			return (NULL);
 		}
-		buffer[bytes_read] = 0;
+		buffer[bytes_read] = '\0';
 		existing_content = join_and_free(existing_content, buffer);
-		if (ft_index_of(buffer, '\n') >= 0)
+		if (strchr_index(buffer, '\n') >= 0)
 			break ;
 	}
 	free(buffer);
@@ -109,11 +109,11 @@ char	*get_next_line(int fd)
 	{
 		free(buffer);
 		buffer = 0;
-		return (0);
+		return (NULL);
 	}
 	buffer = read_to_buffer(fd, buffer);
 	if (!buffer)
-		return (0);
+		return (NULL);
 	line = extract_line(buffer);
 	buffer = remove_extracted_line(buffer);
 	return (line);

@@ -6,7 +6,7 @@
 /*   By: elodlim <elodlim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 20:05:14 by elodlim           #+#    #+#             */
-/*   Updated: 2025/01/19 11:04:25 by elodlim          ###   ########.fr       */
+/*   Updated: 2025/01/21 00:15:29 by elodlim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,8 @@
 #  define BUFFER_SIZE 42
 # endif
 
-typedef struct s_buffer
-{
-	char	*s;
-	int		state;
-	int		empty;
-}			t_buffer;
-
 char		*get_next_line(int fd);
-ssize_t		ft_index_of(char const *s, char c);
+ssize_t		strchr_index(char const *s, char c);
 char		*ft_strjoin(char const *s1, char const *s2);
 size_t		ft_strlen(char const *s);
 void		*ft_calloc(size_t element_count, size_t sz);

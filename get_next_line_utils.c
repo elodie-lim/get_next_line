@@ -6,7 +6,7 @@
 /*   By: elodlim <elodlim@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/02 20:04:06 by elodlim           #+#    #+#             */
-/*   Updated: 2025/01/19 12:01:47 by elodlim          ###   ########.fr       */
+/*   Updated: 2025/01/21 00:15:29 by elodlim          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	*ft_calloc(size_t element_count, size_t element_size)
 	return (ptr);
 }
 
-ssize_t	ft_index_of(char const *s, char c)
+ssize_t	strchr_index(char const *s, char c)
 {
 	ssize_t	i;
 

@@ -37,7 +37,7 @@ void	*ft_calloc(size_t element_count, size_t element_size)
 	return (ptr);
 }
 
-ssize_t	ft_index_of(char const *s, char c)
+ssize_t	strchr_index(char const *s, char c)
 {
 	ssize_t	i;
 
